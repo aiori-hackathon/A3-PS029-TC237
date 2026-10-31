@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: develite-qoo-platform
+    runtime: node
+    plan: free
+    rootDir: src/PS029_CODE
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_VERSION
+        value: 18.20.0
