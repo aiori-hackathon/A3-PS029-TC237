@@ -1,0 +1,13 @@
+{
+  "name": "develite-qoo-platform",
+  "version": "1.0.0",
+  "description": "DevElite QoO Network Evaluation Platform - AIORI Hackathon 3 (PS-029)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {}
+}
