@@ -1,0 +1,32 @@
+{
+  "profile_name": "libreqos-video-streaming",
+  "category": "Buffered Streaming Video (DASH/HLS)",
+  "description": "Buffer-tolerant, throughput-dependent profile modeled after adaptive bitrate video delivery (goDASH 4K/1080p stream sessions).",
+  "parameters": {
+    "delay": {
+      "target_ms": 50.0,
+      "acceptable_ms": 250.0,
+      "unusable_ms": 800.0,
+      "weight": 0.15
+    },
+    "jitter": {
+      "target_ms": 20.0,
+      "acceptable_ms": 60.0,
+      "unusable_ms": 150.0,
+      "weight": 0.15
+    },
+    "loss": {
+      "target_pct": 0.1,
+      "acceptable_pct": 1.5,
+      "unusable_pct": 5.0,
+      "weight": 0.70
+    }
+  },
+  "utility_function": "sigmoid_buffer_absorption",
+  "application_telemetry": {
+    "metric_name": "stall_ratio_pct",
+    "target_value": 0.0,
+    "degraded_threshold": 2.5,
+    "critical_threshold": 8.0
+  }
+}

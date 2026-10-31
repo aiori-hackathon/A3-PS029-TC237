@@ -1,0 +1,12 @@
+apiVersion: 1
+
+providers:
+  - name: 'DevElite QoO Dashboards'
+    orgId: 1
+    folder: 'QoO Evaluation'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 10
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/provisioning/dashboards

@@ -1,0 +1,53 @@
+# === Python ===
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+.Python
+*.egg-info/
+.eggs/
+dist/
+build/
+.venv/
+venv/
+env/
+ENV/
+.env
+*.env.local
+
+# === Node / Frontend ===
+node_modules/
+dist/
+.vite/
+*.local
+
+# === Docker volumes ===
+influxdb_data/
+grafana_data/
+
+# === Data (keep schema, ignore large exports) ===
+# data/*.csv and data/*.json are committed (experiment records)
+# Uncomment to exclude large export files:
+# data/results.csv
+# data/results.json
+
+# === IDE ===
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# === Test artifacts ===
+.pytest_cache/
+htmlcov/
+.coverage
+*.log
+
+# === Credentials ===
+*.pem
+*.key
+*.crt
+secrets.json
+credentials.json

@@ -1,0 +1,32 @@
+{
+  "profile_name": "libreqos-real-time-gaming",
+  "category": "Interactive Real-Time Media",
+  "description": "Strict low-latency, low-jitter profile modeled after competitive first-person multiplayer titles (e.g., CS:GO, Valorant) and cloud interactive rendering.",
+  "parameters": {
+    "delay": {
+      "target_ms": 20.0,
+      "acceptable_ms": 60.0,
+      "unusable_ms": 150.0,
+      "weight": 0.40
+    },
+    "jitter": {
+      "target_ms": 3.0,
+      "acceptable_ms": 12.0,
+      "unusable_ms": 30.0,
+      "weight": 0.35
+    },
+    "loss": {
+      "target_pct": 0.0,
+      "acceptable_pct": 0.5,
+      "unusable_pct": 3.0,
+      "weight": 0.25
+    }
+  },
+  "utility_function": "concave_exponential_penalty",
+  "application_telemetry": {
+    "metric_name": "tick_lag_ms",
+    "target_value": 16.67,
+    "degraded_threshold": 45.0,
+    "critical_threshold": 120.0
+  }
+}

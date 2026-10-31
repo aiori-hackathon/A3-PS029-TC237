@@ -1,0 +1,143 @@
+version: '3.8'
+
+services:
+  # 1. Impairment Gateway (tc-netem REST API)
+  gateway:
+    build:
+      context: ./testbed/gateway
+    container_name: develite-gateway
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PORT=8000
+      - NETEM_IFACE=eth0
+    ports:
+      - "8000:8000"
+    networks:
+      testbed_net:
+        ipv4_address: 172.28.0.2
+
+  # 2. Application Media & Traffic Server
+  server:
+    build:
+      context: ./testbed/server
+    container_name: develite-server
+    ports:
+      - "8080:8080"
+      - "5201:5201"
+    networks:
+      testbed_net:
+        ipv4_address: 172.28.0.3
+
+  # 3. Measurement Client (Active probes & goDASH)
+  client:
+    build:
+      context: ./testbed/client
+    container_name: develite-client
+    environment:
+      - SERVER_HOST=server
+      - SERVER_PORT=8080
+      - IPERF_PORT=5201
+    depends_on:
+      - server
+      - gateway
+    networks:
+      testbed_net:
+        ipv4_address: 172.28.0.4
+
+  # 4. Supplied IETF QoO Calculation Microservice
+  qoo-engine:
+    build:
+      context: ./testbed/qoo-engine
+    container_name: develite-qoo-engine
+    environment:
+      - PORT=8085
+    ports:
+      - "8085:8085"
+    networks:
+      testbed_net:
+        ipv4_address: 172.28.0.5
+
+  # 5. InfluxDB Time-Series Telemetry Store
+  influxdb:
+    image: influxdb:2.7-alpine
+    container_name: develite-influxdb
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=adminpassword123
+      - DOCKER_INFLUXDB_INIT_ORG=develite
+      - DOCKER_INFLUXDB_INIT_BUCKET=telemetry
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=my-secret-token
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+    networks:
+      testbed_net:
+        ipv4_address: 172.28.0.6
+
+  # 6. Grafana Telemetry Visualization
+  grafana:
+    image: grafana/grafana:10.3.0
+    container_name: develite-grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./testbed/grafana/provisioning:/etc/grafana/provisioning
+    depends_on:
+      - influxdb
+    networks:
+      testbed_net:
+        ipv4_address: 172.28.0.7
+
+  # 7. Python FastAPI Backend Service
+  backend:
+    build:
+      context: ./backend
+    container_name: develite-backend
+    environment:
+      - GATEWAY_URL=http://gateway:8000
+      - INFLUX_URL=http://influxdb:8086
+      - INFLUX_TOKEN=my-secret-token
+      - INFLUX_ORG=develite
+      - INFLUX_BUCKET=telemetry
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config
+    depends_on:
+      - gateway
+      - qoo-engine
+      - influxdb
+    networks:
+      testbed_net:
+        ipv4_address: 172.28.0.8
+
+  # 8. Web Dashboard Portal
+  frontend:
+    build:
+      context: ./frontend
+    container_name: develite-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      testbed_net:
+        ipv4_address: 172.28.0.9
+
+networks:
+  testbed_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+
+volumes:
+  influxdb_data:

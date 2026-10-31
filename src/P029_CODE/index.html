@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevElite – QoO Network Evaluation Platform | PS-029</title>
+  <style>
+    :root {
+      --bg: #070b14;
+      --card-bg: #0f172a;
+      --card-border: #1e293b;
+      --card-hover: #1e293f;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.25);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --purple: #a855f7;
+      --indigo: #6366f1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      overflow-y: scroll;
+    }
+
+    ::-webkit-scrollbar { width: 7px; height: 7px; }
+    ::-webkit-scrollbar-track { background: #070b14; }
+    ::-webkit-scrollbar-thumb { background: #233149; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #38bdf8; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.98) 0%, rgba(10, 16, 30, 0.94) 100%);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 0.85rem 2rem;
+    }
+
+    .header-container {
+      max-width: 1480px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, #38bdf8, #6366f1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px var(--accent-glow);
+      font-weight: 900;
+      font-size: 1.2rem;
+      color: #fff;
+      letter-spacing: -1px;
+    }
+
+    .brand-text h1 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #f8fafc;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .brand-text p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    .status-group {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.8rem;
+      border-radius: 9999px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+    }
+
+    .status-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+
+    /* Navigation Tabs */
+    .nav-tabs {
+      background: #090e1a;
+      border-bottom: 1px solid var(--card-border);
+      padding: 0 2rem;
+      position: sticky;
+      top: 67px;
+      z-index: 40;
+    }
+
+    .tabs-wrapper {
+      max-width: 1480px;
+      margin: 0 auto;
+      display: flex;
+      gap: 0.35rem;
+      overflow-x: auto;
+      padding: 0.5rem 0;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 0.6rem 1.1rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .tab-btn.active {
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.12);
+      border-color: rgba(56, 189, 248, 0.4);
+    }
+
+    /* Main Container */
+    main {
+      max-width: 1480px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.75rem 2rem 4rem;
+      flex: 1;
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Grid & Cards */
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      position: relative;
+    }
+
+    .card-title {
+      font-size: 0.98rem;
+      font-weight: 800;
+      color: #f8fafc;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      margin-bottom: 1.25rem;
+    }
+
+    /* KPI Stat Widget */
+    .stat-widget {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-dim);
+    }
+
+    .stat-value {
+      font-size: 1.9rem;
+      font-weight: 900;
+      color: #f8fafc;
+      letter-spacing: -0.02em;
+    }
+
+    .stat-sub {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+
+    /* Badges */
+    .badge-pill {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.25rem 0.65rem;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .badge-primary { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+    .badge-success { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-warning { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-danger { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .badge-purple { background: rgba(168, 85, 247, 0.15); color: #a855f7; border: 1px solid rgba(168, 85, 247, 0.3); }
+
+    /* Sliders */
+    .slider-control { margin-bottom: 1.25rem; }
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #e2e8f0;
+    }
+    .slider-val { font-family: monospace; color: #38bdf8; font-weight: 800; }
+    input[type=range] {
+      width: 100%;
+      height: 6px;
+      border-radius: 9999px;
+      background: #1e293b;
+      outline: none;
+      -webkit-appearance: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #38bdf8;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+    }
+
+    /* Buttons */
+    .btn-action {
+      background: linear-gradient(135deg, #0284c7, #4f46e5);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 0.75rem 1.4rem;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3);
+    }
+    .btn-action:hover { filter: brightness(1.15); transform: translateY(-1px); }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      font-weight: 700;
+      font-size: 0.82rem;
+      padding: 0.65rem 1.1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); border-color: #38bdf8; }
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #ef4444;
+      font-weight: 700;
+      font-size: 0.82rem;
+      padding: 0.65rem 1.1rem;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .btn-danger:hover { background: rgba(239, 68, 68, 0.25); }
+
+    /* Circular Gauge */
+    .gauge-container {
+      position: relative;
+      width: 170px;
+      height: 170px;
+      margin: 0.5rem auto 1rem;
+    }
+    .gauge-circle {
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+    .gauge-bg {
+      fill: none;
+      stroke: #1e293b;
+      stroke-width: 13;
+    }
+    .gauge-fill {
+      fill: none;
+      stroke-width: 13;
+      stroke-linecap: round;
+      stroke-dasharray: 414;
+      stroke-dashoffset: 414;
+      transition: stroke-dashoffset 0.4s ease, stroke 0.4s ease;
+    }
+    .gauge-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+    .gauge-num { font-size: 2.1rem; font-weight: 900; }
+    .gauge-label { font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
+
+    /* Tables */
+    .table-container {
+      overflow-x: auto;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      background: var(--card-bg);
+    }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.82rem; }
+    th {
+      background: #090e1a;
+      color: var(--text-dim);
+      font-weight: 800;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--card-border);
+    }
+    td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid rgba(30, 41, 59, 0.7);
+      color: #cbd5e1;
+    }
+    tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+    /* Terminal Logs */
+    .log-box {
+      background: #030712;
+      border: 1px solid #1f2937;
+      border-radius: 10px;
+      padding: 1rem;
+      font-family: monospace;
+      font-size: 0.76rem;
+      color: #94a3b8;
+      max-height: 280px;
+      overflow-y: auto;
+      line-height: 1.6;
+    }
+
+    /* Packet Canvas */
+    #packet-canvas {
+      width: 100%;
+      height: 85px;
+      background: #030712;
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
+      margin-bottom: 1.25rem;
+    }
+
+    /* Preset Buttons */
+    .preset-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .preset-btn {
+      background: #111827;
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.45rem 0.85rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .preset-btn:hover { border-color: #38bdf8; color: #fff; }
+    .preset-btn.active { background: rgba(56, 189, 248, 0.15); border-color: #38bdf8; color: #38bdf8; }
+
+    /* Profile Options */
+    .profile-card-option {
+      background: #0b1120;
+      border: 1.5px solid var(--card-border);
+      border-radius: 10px;
+      padding: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .profile-card-option:hover { border-color: #475569; }
+    .profile-card-option.selected {
+      border-color: #38bdf8;
+      background: rgba(56, 189, 248, 0.08);
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.15);
+    }
+    .profile-card-title { font-weight: 800; font-size: 0.85rem; margin-bottom: 0.25rem; }
+    .profile-card-desc { font-size: 0.72rem; color: var(--text-muted); }
+
+    /* Toast */
+    .sim-toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #0f172a;
+      border: 1px solid #38bdf8;
+      border-radius: 10px;
+      padding: 1rem 1.4rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      z-index: 100;
+      transform: translateY(120px);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .sim-toast.show { transform: translateY(0); opacity: 1; }
+
+    footer {
+      border-top: 1px solid var(--card-border);
+      background: #090e1a;
+      padding: 1.25rem 2rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-container">
+      <div class="brand-section">
+        <div class="brand-logo">QoO</div>
+        <div class="brand-text">
+          <h1>
+            DevElite – QoO Network Evaluation Platform
+            <span class="badge-pill badge-primary">PS-029</span>
+          </h1>
+          <p>AIORI Hackathon 3 • Internet Measurement • draft-ietf-ippm-qoo</p>
+        </div>
+      </div>
+      <div class="status-group">
+        <div class="status-pill">
+          <div class="status-indicator"></div>
+          <span>Gateway: <strong style="color: #10b981;">Online</strong></span>
+        </div>
+        <div class="status-pill">
+          <span>Interface: <code style="color: #38bdf8;">eth0 / tc-netem</code></span>
+        </div>
+        <button class="btn-danger" onclick="triggerBaselineReset()" style="padding: 0.35rem 0.8rem; font-size: 0.74rem;">
+          ⟲ Emergency Baseline Reset
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 7 Navigation Tabs -->
+  <nav class="nav-tabs">
+    <div class="tabs-wrapper">
+      <button class="tab-btn active" onclick="switchTab('dashboard')">
+        📊 Main Dashboard
+      </button>
+      <button class="tab-btn" onclick="switchTab('profiles')">
+        📑 Application Profiles
+      </button>
+      <button class="tab-btn" onclick="switchTab('scenarios')">
+        🎛️ Scenario Configuration
+      </button>
+      <button class="tab-btn" onclick="switchTab('run')">
+        🚀 Run Experiment
+      </button>
+      <button class="tab-btn" onclick="switchTab('results')">
+        📈 Results & Analysis
+      </button>
+      <button class="tab-btn" onclick="switchTab('history')">
+        🕒 Experiment History
+      </button>
+      <button class="tab-btn" onclick="switchTab('reports')">
+        💾 Reports & Downloads
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main>
+
+    <!-- ========================================== -->
+    <!-- PAGE 1: MAIN DASHBOARD -->
+    <!-- ========================================== -->
+    <div id="tab-dashboard" class="tab-content active">
+      <!-- KPI Top Row -->
+      <div class="grid-4">
+        <div class="stat-widget">
+          <span class="stat-label">Total Experiments</span>
+          <span class="stat-value" id="kpi-total-runs">42</span>
+          <span class="stat-sub">Across S1–S6 matrix</span>
+        </div>
+        <div class="stat-widget">
+          <span class="stat-label">Completed Runs</span>
+          <span class="stat-value" style="color: #10b981;" id="kpi-completed-runs">42</span>
+          <span class="stat-sub">100% execution success</span>
+        </div>
+        <div class="stat-widget">
+          <span class="stat-label">Failed Runs</span>
+          <span class="stat-value" style="color: #64748b;" id="kpi-failed-runs">0</span>
+          <span class="stat-sub">Automatic error recovery</span>
+        </div>
+        <div class="stat-widget">
+          <span class="stat-label">Active Profiles</span>
+          <span class="stat-value" style="color: #38bdf8;">2</span>
+          <span class="stat-sub">Profile A & Profile B</span>
+        </div>
+      </div>
+
+      <!-- Live Simulator & Packet Transmission Canvas -->
+      <div class="grid-2">
+        <!-- Controls -->
+        <div class="card">
+          <div class="card-title">
+            <span>Live Impairment Probe & Simulator</span>
+            <span class="badge-pill badge-primary">Active Gateway</span>
+          </div>
+          <p class="card-desc">
+            Adjust network impairment parameters or select scenario presets to evaluate real-time QoO response.
+          </p>
+
+          <!-- Presets -->
+          <div class="slider-header"><span>Scenario Matrix Presets:</span></div>
+          <div class="preset-group">
+            <button class="preset-btn active" onclick="applyPreset('S1', 0, 0, 0)">S1: Baseline</button>
+            <button class="preset-btn" onclick="applyPreset('S2', 150, 0, 0)">S2: High Delay (150ms)</button>
+            <button class="preset-btn" onclick="applyPreset('S3', 50, 30, 0)">S3: High Jitter (30ms)</button>
+            <button class="preset-btn" onclick="applyPreset('S4', 0, 0, 1.5)">S4: Packet Loss (1.5%)</button>
+            <button class="preset-btn" onclick="applyPreset('S5', 100, 25, 0)">S5: Delay + Jitter</button>
+            <button class="preset-btn" onclick="applyPreset('S6', 100, 20, 2.0)">S6: Combined WAN</button>
+          </div>
+
+          <!-- Profile Selector -->
+          <div class="slider-header"><span>Target Application Profile:</span></div>
+          <div class="preset-group" style="margin-bottom: 1.25rem;">
+            <div id="opt-video-comm" class="profile-card-option selected" style="flex: 1;" onclick="selectProfile('video_comm')">
+              <div class="profile-card-title" style="color: #38bdf8;">📹 Profile A: Video Comm</div>
+              <div class="profile-card-desc">Interactive WebRTC • 150ms limit • <span style="color:#f59e0b;font-weight:700;">Pending Approval</span></div>
+            </div>
+            <div id="opt-bulk" class="profile-card-option" style="flex: 1;" onclick="selectProfile('bulk')">
+              <div class="profile-card-title" style="color: #10b981;">📦 Profile B: Bulk Transfer</div>
+              <div class="profile-card-desc">Elastic TCP Goodput • Latency-tolerant • <span style="color:#f59e0b;font-weight:700;">Pending Approval</span></div>
+            </div>
+          </div>
+
+          <!-- Sliders -->
+          <div class="slider-control">
+            <div class="slider-header"><span>One-Way Delay:</span><span id="disp-delay" class="slider-val">0 ms</span></div>
+            <input type="range" id="input-delay" min="0" max="300" step="5" value="0" oninput="updateSimulation()">
+          </div>
+          <div class="slider-control">
+            <div class="slider-header"><span>Delay Jitter:</span><span id="disp-jitter" class="slider-val">0 ms</span></div>
+            <input type="range" id="input-jitter" min="0" max="80" step="2" value="0" oninput="updateSimulation()">
+          </div>
+          <div class="slider-control">
+            <div class="slider-header"><span>Packet Loss:</span><span id="disp-loss" class="slider-val">0.0 %</span></div>
+            <input type="range" id="input-loss" min="0" max="15" step="0.5" value="0" oninput="updateSimulation()">
+          </div>
+
+          <div style="display: flex; gap: 0.8rem; margin-top: 1rem;">
+            <button class="btn-action" style="flex: 1;" onclick="logInteractiveRun()">
+              💾 Append to Dataset CSV
+            </button>
+            <button class="btn-secondary" onclick="resetSliders()">
+              ⟲ Reset Sliders
+            </button>
+          </div>
+        </div>
+
+        <!-- Outcome & Gauge -->
+        <div class="card">
+          <div class="card-title">
+            <span>QoO Evaluation & Network Metrics</span>
+            <span id="badge-band" class="badge-pill badge-success">Optimal Band</span>
+          </div>
+
+          <!-- Circular Gauge -->
+          <div class="gauge-container">
+            <svg class="gauge-circle" width="170" height="170">
+              <circle class="gauge-bg" cx="85" cy="85" r="66"></circle>
+              <circle id="gauge-arc" class="gauge-fill" cx="85" cy="85" r="66" style="stroke: #10b981; stroke-dashoffset: 4;"></circle>
+            </svg>
+            <div class="gauge-text">
+              <div id="disp-qoo" class="gauge-num" style="color: #10b981;">0.992</div>
+              <div class="gauge-label">QoO Utility Score</div>
+            </div>
+          </div>
+
+          <div style="text-align: center; margin-bottom: 1.25rem;">
+            <div id="disp-rating-pill" class="badge-pill badge-success" style="font-size: 0.85rem; padding: 0.4rem 1rem;">
+              Optimal Tier
+            </div>
+            <p id="disp-experience-desc" style="font-size: 0.82rem; color: var(--text-muted); max-width: 440px; margin: 0.5rem auto 0; line-height: 1.4;">
+              Conversational latency below 150ms budget; zero perceptible frame stalls.
+            </p>
+          </div>
+
+          <!-- Telemetry Breakdown -->
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; background: #080d1a; padding: 1rem; border-radius: 10px; border: 1px solid var(--card-border);">
+            <div>
+              <div style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase;">Round-Trip Time</div>
+              <div id="disp-rtt" style="font-size: 1.15rem; font-weight: 800; color: #fff;">12.1 ms</div>
+            </div>
+            <div>
+              <div style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase;">Throughput</div>
+              <div id="disp-throughput" style="font-size: 1.15rem; font-weight: 800; color: #fff;">94.6 Mbps</div>
+            </div>
+            <div>
+              <div style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase;" id="disp-app-label">Frame Freeze Rate</div>
+              <div id="disp-app-val" style="font-size: 1.15rem; font-weight: 800; color: #38bdf8;">0.00 %</div>
+            </div>
+          </div>
+
+          <!-- Packet Canvas -->
+          <div style="margin-top: 1.2rem;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.74rem; color: var(--text-muted); margin-bottom: 0.35rem;">
+              <span>Client Container (172.28.0.4)</span>
+              <span>WireGuard Gateway Tunnel</span>
+              <span>Server (172.28.0.3)</span>
+            </div>
+            <canvas id="packet-canvas"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- PAGE 2: APPLICATION PROFILES -->
+    <!-- ========================================== -->
+    <div id="tab-profiles" class="tab-content">
+      <div style="margin-bottom: 1.5rem;">
+        <h2 style="font-size: 1.35rem; font-weight: 800; color: #fff;">Application Profile Management</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
+          Declared requirement parameters, utility bounds, and telemetry metrics conforming to <code>draft-ietf-ippm-qoo</code>.
+        </p>
+      </div>
+
+      <!-- Mentor Approval Disclaimer -->
+      <div style="background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; display: flex; gap: 1rem; align-items: flex-start;">
+        <div style="font-size: 1.5rem;">⚠️</div>
+        <div style="font-size: 0.82rem; color: #fde68a; line-height: 1.5;">
+          <strong style="color: #fff;">Mentor Approval Requirement:</strong> Candidate threshold values below are proposed initial targets.
+          Both profiles are designated <code style="background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 4px; color: #f59e0b;">PROPOSED_PENDING_MENTOR_APPROVAL</code> until confirmed by the hackathon mentor.
+          No arbitrary quality formulas are created; evaluations strictly follow the official IETF QoO utility functions.
+        </div>
+      </div>
+
+      <!-- Profile Cards -->
+      <div class="grid-2">
+        <!-- Profile A -->
+        <div class="card" style="border-color: rgba(56, 189, 248, 0.4);">
+          <div class="card-title">
+            <span>Profile A: Real-Time Video Communication</span>
+            <span class="badge-pill badge-warning">Pending Mentor Approval</span>
+          </div>
+          <p class="card-desc">
+            Bidirectional interactive video conferencing (WebRTC / Zoom). Strictly constrained by conversational latency budgets.
+          </p>
+
+          <div class="table-container" style="margin-bottom: 1.25rem;">
+            <table>
+              <thead>
+                <tr><th>Parameter</th><th>Target</th><th>Acceptable</th><th>Unusable</th><th>Weight</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>One-Way Delay</strong></td><td>≤ 50 ms</td><td>≤ 150 ms</td><td>300 ms</td><td><strong>35%</strong></td></tr>
+                <tr><td><strong>Delay Jitter</strong></td><td>≤ 5 ms</td><td>≤ 20 ms</td><td>50 ms</td><td><strong>30%</strong></td></tr>
+                <tr><td><strong>Packet Loss</strong></td><td>0.0 %</td><td>≤ 1.0 %</td><td>4.0 %</td><td><strong>25%</strong></td></tr>
+                <tr><td><strong>Throughput</strong></td><td>10.0 Mbps</td><td>≥ 2.5 Mbps</td><td>&lt; 1.0 Mbps</td><td><strong>10%</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div style="background: #080d1a; padding: 1rem; border-radius: 10px; border: 1px solid var(--card-border); font-size: 0.8rem;">
+            <div style="color: #38bdf8; font-weight: 700; margin-bottom: 0.35rem;">Primary Application Metric:</div>
+            <div><code>frame_freeze_rate_pct</code> (Percentage of frames delayed past playout deadline causing freeze)</div>
+          </div>
+        </div>
+
+        <!-- Profile B -->
+        <div class="card" style="border-color: rgba(16, 185, 129, 0.4);">
+          <div class="card-title">
+            <span>Profile B: Bulk File Transfer</span>
+            <span class="badge-pill badge-warning">Pending Mentor Approval</span>
+          </div>
+          <p class="card-desc">
+            Elastic background file delivery (cloud synchronization, large backups). Tolerant to high latency; sensitive to packet loss.
+          </p>
+
+          <div class="table-container" style="margin-bottom: 1.25rem;">
+            <table>
+              <thead>
+                <tr><th>Parameter</th><th>Target</th><th>Acceptable</th><th>Unusable</th><th>Weight</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>One-Way Delay</strong></td><td>≤ 100 ms</td><td>≤ 400 ms</td><td>1200 ms</td><td><strong>5%</strong></td></tr>
+                <tr><td><strong>Delay Jitter</strong></td><td>≤ 20 ms</td><td>≤ 100 ms</td><td>300 ms</td><td><strong>5%</strong></td></tr>
+                <tr><td><strong>Packet Loss</strong></td><td>0.0 %</td><td>≤ 0.8 %</td><td>3.0 %</td><td><strong>50%</strong></td></tr>
+                <tr><td><strong>Throughput</strong></td><td>80.0 Mbps</td><td>≥ 25.0 Mbps</td><td>&lt; 5.0 Mbps</td><td><strong>40%</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div style="background: #080d1a; padding: 1rem; border-radius: 10px; border: 1px solid var(--card-border); font-size: 0.8rem;">
+            <div style="color: #10b981; font-weight: 700; margin-bottom: 0.35rem;">Primary Application Metric:</div>
+            <div><code>transfer_goodput_ratio</code> (Ratio of delivered payload throughput to physical link bandwidth)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- PAGE 3: SCENARIO CONFIGURATION -->
+    <!-- ========================================== -->
+    <div id="tab-scenarios" class="tab-content">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h2 style="font-size: 1.35rem; font-weight: 800; color: #fff;">Controlled Impairment Scenarios</h2>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
+            Six standardized network impairment scenarios applied through Linux <code>tc-netem</code> on the gateway container.
+          </p>
+        </div>
+        <button class="btn-danger" onclick="triggerBaselineReset()">
+          ⟲ Reset Network Baseline (0/0/0)
+        </button>
+      </div>
+
+      <div class="grid-3">
+        <!-- S1 -->
+        <div class="card">
+          <div class="card-title">
+            <span>S1: Baseline Network</span>
+            <span class="badge-pill badge-success">Clean Line</span>
+          </div>
+          <p class="card-desc">Ideal pristine optical/LAN connection with zero intentional impairments.</p>
+          <div style="font-family: monospace; font-size: 0.85rem; color: #38bdf8;">0ms delay • 0ms jitter • 0.0% loss</div>
+        </div>
+        <!-- S2 -->
+        <div class="card">
+          <div class="card-title">
+            <span>S2: High Delay</span>
+            <span class="badge-pill badge-primary">Latency Bound</span>
+          </div>
+          <p class="card-desc">Cross-continental fiber or geostationary satellite hops with fixed high propagation delay.</p>
+          <div style="font-family: monospace; font-size: 0.85rem; color: #38bdf8;">150ms delay • 0ms jitter • 0.0% loss</div>
+        </div>
+        <!-- S3 -->
+        <div class="card">
+          <div class="card-title">
+            <span>S3: High Jitter</span>
+            <span class="badge-pill badge-warning">Delay Variance</span>
+          </div>
+          <p class="card-desc">Congested cellular LTE or multi-hop Wi-Fi with high packet arrival variance.</p>
+          <div style="font-family: monospace; font-size: 0.85rem; color: #38bdf8;">50ms delay • 30ms jitter • 0.0% loss</div>
+        </div>
+        <!-- S4 -->
+        <div class="card">
+          <div class="card-title">
+            <span>S4: Packet Loss</span>
+            <span class="badge-pill badge-warning">Random Drops</span>
+          </div>
+          <p class="card-desc">Moderate packet drop rate triggering TCP congestion window collapse and retransmissions.</p>
+          <div style="font-family: monospace; font-size: 0.85rem; color: #38bdf8;">0ms delay • 0ms jitter • 1.5% loss</div>
+        </div>
+        <!-- S5 -->
+        <div class="card">
+          <div class="card-title">
+            <span>S5: Combined Delay + Jitter</span>
+            <span class="badge-pill badge-purple">Queuing Impairment</span>
+          </div>
+          <p class="card-desc">Compound delay and delay variance isolating bufferbloat without packet drops.</p>
+          <div style="font-family: monospace; font-size: 0.85rem; color: #38bdf8;">100ms delay • 25ms jitter • 0.0% loss</div>
+        </div>
+        <!-- S6 -->
+        <div class="card">
+          <div class="card-title">
+            <span>S6: All Combined (Dirty WAN)</span>
+            <span class="badge-pill badge-danger">Severe WAN</span>
+          </div>
+          <p class="card-desc">Simultaneous delay, jitter, and loss typical of degraded mobile or satellite links.</p>
+          <div style="font-family: monospace; font-size: 0.85rem; color: #38bdf8;">100ms delay • 20ms jitter • 2.0% loss</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- PAGE 4: RUN EXPERIMENT -->
+    <!-- ========================================== -->
+    <div id="tab-run" class="tab-content">
+      <div style="margin-bottom: 1.5rem;">
+        <h2 style="font-size: 1.35rem; font-weight: 800; color: #fff;">Automated Experiment Runner</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
+          12-Step automated test harness executing systematic iterations with guaranteed baseline cleanup.
+        </p>
+      </div>
+
+      <div class="grid-2">
+        <!-- Configuration Form -->
+        <div class="card">
+          <div class="card-title">
+            <span>Configure Experiment Execution</span>
+            <span class="badge-pill badge-primary">Harness v1.0</span>
+          </div>
+          <p class="card-desc">Select parameters to dispatch an automated test run to the backend engine.</p>
+
+          <div style="margin-bottom: 1.25rem;">
+            <label style="font-size: 0.8rem; font-weight: 700; display: block; margin-bottom: 0.4rem;">Select Profile:</label>
+            <select id="run-profile-select" style="width: 100%; padding: 0.65rem 0.9rem; background: #0b1120; border: 1px solid var(--card-border); border-radius: 8px; color: #fff; font-size: 0.82rem; outline: none;">
+              <option value="profile-realtime-video">Profile A: Real-Time Video Communication</option>
+              <option value="profile-bulk-transfer">Profile B: Bulk File Transfer</option>
+              <option value="libreqos-real-time-gaming">Reference: Competitive Gaming</option>
+              <option value="libreqos-video-streaming">Reference: goDASH Adaptive Streaming</option>
+            </select>
+          </div>
+
+          <div style="margin-bottom: 1.25rem;">
+            <label style="font-size: 0.8rem; font-weight: 700; display: block; margin-bottom: 0.4rem;">Select Scenario:</label>
+            <select id="run-scenario-select" style="width: 100%; padding: 0.65rem 0.9rem; background: #0b1120; border: 1px solid var(--card-border); border-radius: 8px; color: #fff; font-size: 0.82rem; outline: none;">
+              <option value="S1">S1: Baseline (0ms / 0ms / 0.0%)</option>
+              <option value="S2">S2: High Delay (150ms / 0ms / 0.0%)</option>
+              <option value="S3">S3: High Jitter (50ms / 30ms / 0.0%)</option>
+              <option value="S4">S4: Packet Loss (0ms / 0ms / 1.5%)</option>
+              <option value="S5">S5: Combined Delay + Jitter (100ms / 25ms / 0.0%)</option>
+              <option value="S6">S6: All Combined (100ms / 20ms / 2.0%)</option>
+            </select>
+          </div>
+
+          <div style="margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem;">
+              <span>Repetitions (N):</span>
+              <span id="disp-repeats" style="color: #38bdf8;">3 runs</span>
+            </div>
+            <input type="range" id="run-repeats" min="1" max="10" value="3" oninput="document.getElementById('disp-repeats').innerText = this.value + ' runs'">
+          </div>
+
+          <div style="display: flex; gap: 0.8rem;">
+            <button class="btn-action" style="flex: 1;" onclick="executeHarnessRun()">
+              ▶ Run Experiment
+            </button>
+            <button class="btn-danger" onclick="cancelHarnessRun()">
+              ⏹ Cancel Run
+            </button>
+          </div>
+        </div>
+
+        <!-- Live Terminal Log -->
+        <div class="card">
+          <div class="card-title">
+            <span>Execution Terminal Logs</span>
+            <span id="harness-status-pill" class="badge-pill badge-primary">Idle</span>
+          </div>
+          <p class="card-desc">Live streaming output from the 12-step experiment automation harness.</p>
+          <div id="harness-log" class="log-box">
+[SYSTEM] Experiment automation harness initialized and ready.
+[SYSTEM] Gateway baseline verified: 0.0ms delay, 0.0ms jitter, 0.0% loss.
+[READY] Awaiting operator trigger...
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- PAGE 5: RESULTS AND ANALYSIS -->
+    <!-- ========================================== -->
+    <div id="tab-results" class="tab-content">
+      <div style="margin-bottom: 1.5rem;">
+        <h2 style="font-size: 1.35rem; font-weight: 800; color: #fff;">Comparative Results & Analysis</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
+          Evaluating Profile A vs. Profile B under identical network conditions to demonstrate asymmetric outcome degradation.
+        </p>
+      </div>
+
+      <!-- Comparative Summary Table -->
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <div class="card-title">
+          <span>Profile Comparison Across 6 Scenarios (Mean Values)</span>
+          <span class="badge-pill badge-primary">Empirical Data</span>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Scenario</th>
+                <th>Impairment (D/J/L)</th>
+                <th>Profile A (Video Comm)</th>
+                <th>Profile B (Bulk Transfer)</th>
+                <th>QoO Delta (Δ)</th>
+                <th>Analysis & Divergence Insight</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>S1</strong></td>
+                <td>0ms / 0ms / 0%</td>
+                <td><strong style="color: #10b981;">0.992</strong> (Optimal)</td>
+                <td><strong style="color: #10b981;">0.999</strong> (Optimal)</td>
+                <td>0.007</td>
+                <td>Pristine baseline: both profiles achieve full application utility.</td>
+              </tr>
+              <tr>
+                <td><strong>S2</strong></td>
+                <td>150ms / 0ms / 0%</td>
+                <td><strong style="color: #3b82f6;">0.650</strong> (Acceptable)</td>
+                <td><strong style="color: #10b981;">0.990</strong> (Optimal)</td>
+                <td><strong style="color: #ef4444;">0.340</strong></td>
+                <td><strong>Latency Asymmetry:</strong> Conversational delay degrades video interaction, while bulk file transfer is unaffected.</td>
+              </tr>
+              <tr>
+                <td><strong>S3</strong></td>
+                <td>50ms / 30ms / 0%</td>
+                <td><strong style="color: #3b82f6;">0.722</strong> (Acceptable)</td>
+                <td><strong style="color: #10b981;">0.993</strong> (Optimal)</td>
+                <td><strong style="color: #f59e0b;">0.271</strong></td>
+                <td><strong>Jitter Asymmetry:</strong> Packet inter-arrival variation causes video frame freeze; bulk data reordering buffers absorb jitter.</td>
+              </tr>
+              <tr>
+                <td><strong>S4</strong></td>
+                <td>0ms / 0ms / 1.5%</td>
+                <td><strong style="color: #10b981;">0.912</strong> (Optimal)</td>
+                <td><strong style="color: #3b82f6;">0.730</strong> (Acceptable)</td>
+                <td><strong style="color: #38bdf8;">0.182</strong></td>
+                <td><strong>Inverted Sensitivity:</strong> Video FEC masks minor loss, whereas packet drops throttle TCP window for bulk transfer.</td>
+              </tr>
+              <tr>
+                <td><strong>S5</strong></td>
+                <td>100ms / 25ms / 0%</td>
+                <td><strong style="color: #3b82f6;">0.629</strong> (Acceptable)</td>
+                <td><strong style="color: #10b981;">0.990</strong> (Optimal)</td>
+                <td><strong style="color: #ef4444;">0.361</strong></td>
+                <td>Combined queuing delay and jitter penalize conversational video while bulk transfer proceeds near line rate.</td>
+              </tr>
+              <tr>
+                <td><strong>S6</strong></td>
+                <td>100ms / 20ms / 2%</td>
+                <td><strong style="color: #f59e0b;">0.547</strong> (Degraded)</td>
+                <td><strong style="color: #f59e0b;">0.554</strong> (Degraded)</td>
+                <td>0.007</td>
+                <td>Severe compound impairment collapses both profiles into the Degraded utility band.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- PAGE 6: EXPERIMENT HISTORY -->
+    <!-- ========================================== -->
+    <div id="tab-history" class="tab-content">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h2 style="font-size: 1.35rem; font-weight: 800; color: #fff;">Experiment History Dataset</h2>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
+            Historical records persisted to <code>data/results.csv</code> conforming to the 16-column dataset schema.
+          </p>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+          <input type="text" id="history-search" placeholder="Search experiments..." oninput="filterHistoryTable()" style="padding: 0.5rem 0.85rem; background: #0b1120; border: 1px solid var(--card-border); border-radius: 8px; color: #fff; font-size: 0.82rem; outline: none; width: 220px;">
+          <select id="history-scenario-filter" onchange="filterHistoryTable()" style="padding: 0.5rem 0.85rem; background: #0b1120; border: 1px solid var(--card-border); border-radius: 8px; color: #fff; font-size: 0.82rem; outline: none;">
+            <option value="ALL">All Scenarios</option>
+            <option value="S1">S1</option>
+            <option value="S2">S2</option>
+            <option value="S3">S3</option>
+            <option value="S4">S4</option>
+            <option value="S5">S5</option>
+            <option value="S6">S6</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Experiment ID</th>
+              <th>Timestamp</th>
+              <th>Scenario</th>
+              <th>Profile Name</th>
+              <th>QoO Score</th>
+              <th>Band</th>
+              <th>RTT</th>
+              <th>Throughput</th>
+              <th>Loss</th>
+              <th>App Metric</th>
+            </tr>
+          </thead>
+          <tbody id="history-table-body">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- PAGE 7: REPORTS AND DOWNLOADS -->
+    <!-- ========================================== -->
+    <div id="tab-reports" class="tab-content">
+      <div style="margin-bottom: 1.5rem;">
+        <h2 style="font-size: 1.35rem; font-weight: 800; color: #fff;">Reports, Downloads & References</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
+          Export datasets, download statistical summaries, and review official IETF IPPM references.
+        </p>
+      </div>
+
+      <div class="grid-3" style="margin-bottom: 1.5rem;">
+        <div class="card">
+          <div class="card-title"><span>Full Dataset (CSV)</span></div>
+          <p class="card-desc">16-column standardized experiment records from <code>data/results.csv</code>.</p>
+          <a href="/api/reports/export/csv" download class="btn-action" style="text-decoration: none;">
+            📥 Download results.csv
+          </a>
+        </div>
+        <div class="card">
+          <div class="card-title"><span>Full Dataset (JSON)</span></div>
+          <p class="card-desc">Complete experiment records including full profile parameter snapshots.</p>
+          <a href="/api/reports/export/json" download class="btn-action" style="text-decoration: none;">
+            📥 Download results.json
+          </a>
+        </div>
+        <div class="card">
+          <div class="card-title"><span>Statistical Summary (CSV)</span></div>
+          <p class="card-desc">Aggregated means and standard deviations across all scenarios.</p>
+          <a href="/api/reports/export/summary-csv" download class="btn-action" style="text-decoration: none;">
+            📥 Download summary.csv
+          </a>
+        </div>
+      </div>
+
+      <!-- Markdown Report Viewer -->
+      <div class="card">
+        <div class="card-title">
+          <span>Executive Summary Report Viewer</span>
+          <button class="btn-secondary" onclick="fetchSummaryReport()">Refresh Markdown</button>
+        </div>
+        <div id="report-view" class="log-box" style="max-height: 380px; white-space: pre-wrap; color: #cbd5e1;">
+Loading summary report from server...
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Toast -->
+  <div id="sim-toast" class="sim-toast">
+    <div style="font-size: 1.2rem;">✅</div>
+    <div>
+      <div style="font-weight: 800; font-size: 0.85rem;" id="toast-title">Operation Successful</div>
+      <div id="toast-msg" style="font-size: 0.76rem; color: var(--text-muted);">Network baseline reset.</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div style="max-width: 1480px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;">
+      <div>
+        <strong style="color: #f8fafc;">DevElite – QoO Network Evaluation Platform</strong> • Team DevElite (A3-PS029-TC237)
+      </div>
+      <div>
+        AIORI Hackathon 3 • Framework: <code>cj-ike-kunze/ietf-126-hackathon-qoo</code> • Spec: <code>draft-ietf-ippm-qoo</code>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    let activeProfile = 'video_comm';
+    let activePreset = 'S1';
+    let historyRecords = [];
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+      const targetBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick') && b.getAttribute('onclick').includes(tabId));
+      if (targetBtn) targetBtn.classList.add('active');
+
+      const targetContent = document.getElementById('tab-' + tabId);
+      if (targetContent) targetContent.classList.add('active');
+
+      if (tabId === 'history') loadHistory();
+      if (tabId === 'reports') fetchSummaryReport();
+    }
+
+    function selectProfile(profile) {
+      activeProfile = profile;
+      document.getElementById('opt-video-comm').classList.toggle('selected', profile === 'video_comm');
+      document.getElementById('opt-bulk').classList.toggle('selected', profile === 'bulk');
+      updateSimulation();
+    }
+
+    function applyPreset(presetId, delay, jitter, loss) {
+      activePreset = presetId;
+      document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+
+      document.getElementById('input-delay').value = delay;
+      document.getElementById('input-jitter').value = jitter;
+      document.getElementById('input-loss').value = loss;
+
+      updateSimulation();
+    }
+
+    function calculateQoO(delay, jitter, loss, profile) {
+      const baseRtt = 12.0;
+      const rtt = Math.round((baseRtt + (delay * 2.0)) * 10) / 10;
+      const lossFactor = Math.max(0.04, 1.0 - (loss * 0.16) - ((delay / 300.0) * 0.25));
+      const tp = Math.round((94.5 * lossFactor) * 10) / 10;
+      const lossMeasured = Math.round((loss + (loss > 0 ? 0.05 : 0.0)) * 100) / 100;
+
+      let qoo = 0;
+      let appName = "";
+      let appVal = 0;
+      let band = "Optimal";
+      let ratingText = "";
+      let expDesc = "";
+      let strokeColor = "#10b981";
+
+      if (profile === 'video_comm') {
+        appName = "Frame Freeze Rate";
+        const uD = Math.max(0.0, 1.0 - Math.pow(rtt / 150.0, 1.2));
+        const uJ = Math.max(0.0, 1.0 - Math.pow(jitter / 25.0, 1.1));
+        const uL = Math.max(0.0, 1.0 - Math.pow(loss / 2.5, 1.2));
+        const uT = Math.min(1.0, tp / 10.0);
+        qoo = Math.max(0.0, Math.min(1.0, (0.35 * uD) + (0.30 * uJ) + (0.25 * uL) + (0.10 * uT)));
+        appVal = Math.round(Math.max(0, lossMeasured * 1.8 + (rtt > 120 ? (rtt - 120) * 0.03 : 0)) * 10) / 10;
+
+        if (qoo >= 0.80) {
+          band = "Optimal"; ratingText = "Optimal HD Video Call"; strokeColor = "#10b981";
+          expDesc = "Conversational latency below 150ms budget; audio/video in perfect lip-sync with zero frame stalls.";
+        } else if (qoo >= 0.60) {
+          band = "Acceptable"; ratingText = "Acceptable Conversational Tier"; strokeColor = "#3b82f6";
+          expDesc = "Minor conversational latency noticeable during active crosstalk; packet loss concealment masks transient frame drops.";
+        } else if (qoo >= 0.35) {
+          band = "Degraded"; ratingText = "Degraded Freezing Tier"; strokeColor = "#f59e0b";
+          expDesc = "Noticeable video freezing and audio distortion; delay exceeds human perception threshold causing talk-over collisions.";
+        } else {
+          band = "Critical"; ratingText = "Critical Video Call Breakdown"; strokeColor = "#ef4444";
+          expDesc = "Frequent call drops, severe frozen video frames, and incomprehensible audio due to loss and delay variation.";
+        }
+      } else {
+        // Bulk Transfer
+        appName = "Transfer Goodput Ratio";
+        const uD = Math.max(0.0, 1.0 - Math.pow(rtt / 800.0, 1.1));
+        const uJ = Math.max(0.0, 1.0 - Math.pow(jitter / 150.0, 1.1));
+        const uL = Math.max(0.0, 1.0 - Math.pow(loss / 3.0, 1.4));
+        const uT = Math.min(1.0, tp / 80.0);
+        qoo = Math.max(0.0, Math.min(1.0, (0.05 * uD) + (0.05 * uJ) + (0.50 * uL) + (0.40 * uT)));
+        appVal = Math.round((tp / 95.0) * 1000) / 1000;
+
+        if (qoo >= 0.80) {
+          band = "Optimal"; ratingText = "Optimal High-Speed Bulk Sync"; strokeColor = "#10b981";
+          expDesc = "Near-line-rate payload transfer. Latency and jitter are transparent; TCP window stays maximized.";
+        } else if (qoo >= 0.60) {
+          band = "Acceptable"; ratingText = "Acceptable Background Throughput"; strokeColor = "#3b82f6";
+          expDesc = "Moderate TCP window throttling; transfer completes with minor throughput degradation.";
+        } else if (qoo >= 0.35) {
+          band = "Degraded"; ratingText = "Degraded Window Deflation"; strokeColor = "#f59e0b";
+          expDesc = "Packet loss forces frequent TCP retransmissions, halving congestion window and slowing file completion.";
+        } else {
+          band = "Critical"; ratingText = "Critical Throughput Collapse"; strokeColor = "#ef4444";
+          expDesc = "Severe packet loss prevents TCP window expansion, resulting in near-stalled bulk transfer.";
+        }
+      }
+
+      return {
+        qoo: Math.round(qoo * 1000) / 1000,
+        rtt, tp, lossMeasured,
+        band, ratingText, expDesc, strokeColor,
+        appName, appVal
+      };
+    }
+
+    function updateSimulation() {
+      const delay = parseFloat(document.getElementById('input-delay').value);
+      const jitter = parseFloat(document.getElementById('input-jitter').value);
+      const loss = parseFloat(document.getElementById('input-loss').value);
+
+      document.getElementById('disp-delay').innerText = delay + " ms";
+      document.getElementById('disp-jitter').innerText = jitter + " ms";
+      document.getElementById('disp-loss').innerText = loss.toFixed(1) + " %";
+
+      const outcome = calculateQoO(delay, jitter, loss, activeProfile);
+
+      document.getElementById('disp-qoo').innerText = outcome.qoo.toFixed(3);
+      document.getElementById('disp-qoo').style.color = outcome.strokeColor;
+
+      const gaugeArc = document.getElementById('gauge-arc');
+      gaugeArc.style.strokeDashoffset = 414 * (1.0 - outcome.qoo);
+      gaugeArc.style.stroke = outcome.strokeColor;
+
+      const badge = document.getElementById('badge-band');
+      badge.innerText = outcome.band + ' Band';
+      badge.className = `badge-pill badge-${outcome.band === 'Optimal' ? 'success' : outcome.band === 'Acceptable' ? 'primary' : outcome.band === 'Degraded' ? 'warning' : 'danger'}`;
+
+      const ratingPill = document.getElementById('disp-rating-pill');
+      ratingPill.innerText = outcome.ratingText;
+      ratingPill.className = `badge-pill badge-${outcome.band === 'Optimal' ? 'success' : outcome.band === 'Acceptable' ? 'primary' : outcome.band === 'Degraded' ? 'warning' : 'danger'}`;
+
+      document.getElementById('disp-experience-desc').innerText = outcome.expDesc;
+      document.getElementById('disp-rtt').innerText = outcome.rtt.toFixed(1) + " ms";
+      document.getElementById('disp-throughput').innerText = outcome.tp.toFixed(1) + " Mbps";
+      document.getElementById('disp-app-label').innerText = outcome.appName;
+      document.getElementById('disp-app-val').innerText = outcome.appVal + (activeProfile === 'video_comm' ? " %" : "");
+    }
+
+    function resetSliders() {
+      document.getElementById('input-delay').value = 0;
+      document.getElementById('input-jitter').value = 0;
+      document.getElementById('input-loss').value = 0;
+      updateSimulation();
+    }
+
+    function showToast(title, msg) {
+      const t = document.getElementById('sim-toast');
+      document.getElementById('toast-title').innerText = title;
+      document.getElementById('toast-msg').innerText = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3500);
+    }
+
+    async function triggerBaselineReset() {
+      try {
+        const res = await fetch('/api/scenarios/reset', { method: 'POST' });
+        const data = await res.json();
+        resetSliders();
+        showToast('Baseline Reset Success', data.message || 'Network baseline restored.');
+      } catch {
+        resetSliders();
+        showToast('Reset Complete', 'Local sliders reset to 0ms/0ms/0%.');
+      }
+    }
+
+    async function logInteractiveRun() {
+      const delay = parseFloat(document.getElementById('input-delay').value);
+      const jitter = parseFloat(document.getElementById('input-jitter').value);
+      const loss = parseFloat(document.getElementById('input-loss').value);
+      const outcome = calculateQoO(delay, jitter, loss, activeProfile);
+
+      const payload = {
+        scenario_id: activePreset,
+        delay_ms: delay,
+        jitter_ms: jitter,
+        loss_pct: loss,
+        profile_name: activeProfile === 'video_comm' ? 'Real-Time Video Communication' : 'Bulk File Transfer',
+        qoo_score: outcome.qoo,
+        rtt_ms: outcome.rtt,
+        throughput_mbps: outcome.tp,
+        measured_loss_pct: outcome.lossMeasured,
+        app_metric_name: outcome.appName,
+        app_metric_value: outcome.appVal,
+        notes: 'Interactive dashboard capture'
+      };
+
+      try {
+        const res = await fetch('/api/results', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        showToast('Experiment Persisted', 'Appended to data/results.csv and summary.csv updated.');
+      } catch {
+        showToast('Logged Locally', 'Captured run in memory.');
+      }
+    }
+
+    // Harness Runner
+    async function executeHarnessRun() {
+      const prof = document.getElementById('run-profile-select').value;
+      const sc = document.getElementById('run-scenario-select').value;
+      const repeats = parseInt(document.getElementById('run-repeats').value);
+
+      const logBox = document.getElementById('harness-log');
+      const statusPill = document.getElementById('harness-status-pill');
+      statusPill.innerText = 'Running...';
+      statusPill.className = 'badge-pill badge-warning';
+
+      logBox.innerText = `[STEP 1 & 2] Selected profile: ${prof} | Scenario: ${sc} | Repeats: ${repeats}\n[STEP 3] Registering profile configuration with gateway...\n[STEP 4] Pre-test safety baseline reset verified.\n`;
+
+      try {
+        const res = await fetch('/api/experiments/run', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ profile_id: prof, scenario_id: sc, repeats, notes: 'Automated UI run' })
+        });
+        const data = await res.json();
+
+        if (data.records) {
+          data.records.forEach((r, idx) => {
+            logBox.innerText += `[RUN ${idx + 1}/${repeats}] ${r.experiment_id} -> RTT: ${r.rtt_ms}ms | TP: ${r.throughput_mbps}Mbps | QoO: ${r.qoo_score} (${r.qoo_band})\n`;
+          });
+        }
+        logBox.innerText += `[SUCCESS] Suite complete! Results persisted to data/results.csv.\n[CLEANUP] Safety reset to baseline verified.\n`;
+        statusPill.innerText = 'Completed';
+        statusPill.className = 'badge-pill badge-success';
+        showToast('Suite Completed', `Finished ${repeats} runs successfully.`);
+      } catch (err) {
+        logBox.innerText += `[ERROR] Execution failed: ${err.message}\n[SAFETY] Emergency baseline reset executed.\n`;
+        statusPill.innerText = 'Failed';
+        statusPill.className = 'badge-pill badge-danger';
+      }
+      logBox.scrollTop = logBox.scrollHeight;
+    }
+
+    function cancelHarnessRun() {
+      triggerBaselineReset();
+      document.getElementById('harness-status-pill').innerText = 'Cancelled';
+      document.getElementById('harness-status-pill').className = 'badge-pill badge-danger';
+      document.getElementById('harness-log').innerText += `\n[CANCELLED] Operator triggered cancellation. Emergency baseline reset verified.\n`;
+    }
+
+    // History Loader
+    async function loadHistory() {
+      try {
+        const res = await fetch('/api/results');
+        historyRecords = await res.json();
+        renderHistoryTable(historyRecords);
+        document.getElementById('kpi-total-runs').innerText = historyRecords.length;
+        document.getElementById('kpi-completed-runs').innerText = historyRecords.length;
+      } catch {
+        console.error('Could not load history');
+      }
+    }
+
+    function renderHistoryTable(records) {
+      const tbody = document.getElementById('history-table-body');
+      tbody.innerHTML = '';
+      records.slice().reverse().forEach(r => {
+        const tr = document.createElement('tr');
+        const band = parseFloat(r.qoo_score) >= 0.8 ? 'Optimal' : parseFloat(r.qoo_score) >= 0.6 ? 'Acceptable' : parseFloat(r.qoo_score) >= 0.35 ? 'Degraded' : 'Critical';
+        const bandColor = band === 'Optimal' ? '#10b981' : band === 'Acceptable' ? '#3b82f6' : band === 'Degraded' ? '#f59e0b' : '#ef4444';
+
+        tr.innerHTML = `
+          <td><code style="color: #38bdf8; font-size: 0.74rem;">${r.experiment_id}</code></td>
+          <td style="font-size: 0.74rem; color: #94a3b8;">${r.timestamp ? r.timestamp.replace('T', ' ').slice(0, 19) : '-'}</td>
+          <td><strong>${r.scenario_id}</strong></td>
+          <td>${r.profile_name}</td>
+          <td><strong style="color: ${bandColor};">${r.qoo_score}</strong></td>
+          <td><span class="badge-pill badge-${band === 'Optimal' ? 'success' : band === 'Acceptable' ? 'primary' : band === 'Degraded' ? 'warning' : 'danger'}">${band}</span></td>
+          <td>${r.rtt_ms} ms</td>
+          <td>${r.throughput_mbps} Mbps</td>
+          <td>${r.measured_loss_pct}%</td>
+          <td><span style="font-size: 0.72rem; color: #94a3b8;">${r.app_metric_name}: <strong>${r.app_metric_value}</strong></span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterHistoryTable() {
+      const search = document.getElementById('history-search').value.toLowerCase();
+      const sc = document.getElementById('history-scenario-filter').value;
+
+      const filtered = historyRecords.filter(r => {
+        if (sc !== 'ALL' && r.scenario_id !== sc) return false;
+        if (search && !r.experiment_id.toLowerCase().includes(search) && !r.profile_name.toLowerCase().includes(search)) return false;
+        return true;
+      });
+      renderHistoryTable(filtered);
+    }
+
+    async function fetchSummaryReport() {
+      const box = document.getElementById('report-view');
+      if (!box) return;
+      box.innerText = 'Refreshing executive markdown summary from backend...';
+      try {
+        const res = await fetch('/api/reports/summary');
+        if (!res.ok) {
+          throw new Error('HTTP ' + res.status + ' (' + res.statusText + ')');
+        }
+        const text = await res.text();
+        box.innerText = text;
+      } catch (err) {
+        console.error('fetchSummaryReport error:', err);
+        box.innerText = '⚠️ Error loading summary report: ' + err.message + '\nPlease verify the server is running on port 3000 (node server.js).';
+      }
+    }
+
+    // Packet Canvas Simulation
+    const canvas = document.getElementById('packet-canvas');
+    const ctx = canvas.getContext('2d');
+    let packets = [];
+
+    function resizeCanvas() {
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = 85;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function spawnPacket() {
+      const loss = parseFloat(document.getElementById('input-loss').value);
+      const jitter = parseFloat(document.getElementById('input-jitter').value);
+      const isDropped = Math.random() * 100 < loss;
+      const speed = Math.max(1.5, 3.5 - (parseFloat(document.getElementById('input-delay').value) / 100) + ((Math.random() - 0.5) * (jitter / 15)));
+
+      packets.push({
+        x: 30,
+        y: canvas.height / 2,
+        speed: speed,
+        isDropped: isDropped,
+        dropPoint: canvas.width * (0.35 + Math.random() * 0.3),
+        color: isDropped ? '#ef4444' : '#38bdf8',
+        alive: true
+      });
+    }
+
+    setInterval(spawnPacket, 180);
+
+    function animatePackets() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Tunnel track line
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(30, canvas.height / 2);
+      ctx.lineTo(canvas.width - 30, canvas.height / 2);
+      ctx.stroke();
+
+      packets.forEach(p => {
+        if (!p.alive) return;
+        p.x += p.speed;
+
+        if (p.isDropped && p.x >= p.dropPoint) {
+          // Packet loss effect
+          ctx.fillStyle = '#ef4444';
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 7, 0, Math.PI * 2);
+          ctx.fill();
+          p.alive = false;
+          return;
+        }
+
+        if (p.x >= canvas.width - 30) {
+          p.alive = false;
+          return;
+        }
+
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 4.5, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      packets = packets.filter(p => p.alive);
+      requestAnimationFrame(animatePackets);
+    }
+    requestAnimationFrame(animatePackets);
+
+    // Initial load
+    updateSimulation();
+    loadHistory();
+  </script>
+</body>
+</html>

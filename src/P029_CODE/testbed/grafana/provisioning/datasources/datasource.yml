@@ -1,0 +1,16 @@
+apiVersion: 1
+
+datasources:
+  - name: InfluxDB-Telemetry
+    type: influxdb
+    access: proxy
+    url: http://influxdb:8086
+    database: telemetry
+    jsonData:
+      version: Flux
+      organization: develite
+      defaultBucket: telemetry
+    secureJsonData:
+      token: my-secret-token
+    isDefault: true
+    editable: false

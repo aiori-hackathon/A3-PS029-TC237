@@ -1,0 +1,46 @@
+{
+  "id": "profile-realtime-video",
+  "profile_name": "Real-Time Video Communication",
+  "category": "Interactive Real-Time Media (WebRTC / Interactive Video)",
+  "status": "PROPOSED_PENDING_MENTOR_APPROVAL",
+  "version": "1.0.0",
+  "reference_rfc": "RFC 4594 / RFC 8835 / draft-ietf-ippm-qoo",
+  "description": "Interactive bidirectional video conferencing (e.g., WebRTC/Zoom). Extremely sensitive to round-trip latency and jitter due to conversational interactivity constraints, with packet loss concealment (PLC) for minor losses.",
+  "parameters": {
+    "delay": {
+      "target_ms": 50.0,
+      "acceptable_ms": 150.0,
+      "unusable_ms": 300.0,
+      "max_acceptable_ms": 150.0,
+      "weight": 0.35
+    },
+    "jitter": {
+      "target_ms": 5.0,
+      "acceptable_ms": 20.0,
+      "unusable_ms": 50.0,
+      "max_acceptable_ms": 20.0,
+      "weight": 0.30
+    },
+    "loss": {
+      "target_pct": 0.0,
+      "acceptable_pct": 1.0,
+      "unusable_pct": 4.0,
+      "max_acceptable_pct": 1.0,
+      "weight": 0.25
+    },
+    "throughput": {
+      "min_required_mbps": 2.5,
+      "target_mbps": 10.0,
+      "weight": 0.10
+    }
+  },
+  "utility_function": "concave_exponential_penalty",
+  "application_telemetry": {
+    "metric_name": "frame_freeze_rate_pct",
+    "description": "Percentage of video frames delayed past playout deadline causing visible freeze",
+    "target_value": 0.0,
+    "degraded_threshold": 1.5,
+    "critical_threshold": 5.0,
+    "unit": "%"
+  }
+}

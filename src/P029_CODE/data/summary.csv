@@ -1,0 +1,25 @@
+scenario_id,profile_name,delay_ms,jitter_ms,loss_pct,run_count,qoo_mean,qoo_band,rtt_mean_ms,throughput_mean_mbps,app_metric_name,app_metric_mean
+S1,Bulk File Transfer,0,0,0,3,0.999,Optimal,11.9,94.4,transfer_goodput_ratio,0.99
+S1,Real-Time Video Communication,0,0,0,3,0.992,Optimal,11.9,94.4,frame_freeze_rate_pct,0.03
+S1,libreqos-real-time-gaming,0,0,0,3,0.984,Optimal,11.9,94.4,tick_lag_ms,22.77
+S1,libreqos-video-streaming,0,0,0,3,0.995,Optimal,11.9,94.4,stall_ratio_pct,0
+S2,Bulk File Transfer,150,0,0,3,0.99,Optimal,311.9,82.6,transfer_goodput_ratio,0.87
+S2,Real-Time Video Communication,150,0,0,3,0.65,Acceptable,311.9,82.6,frame_freeze_rate_pct,5.78
+S2,libreqos-real-time-gaming,150,0,0,3,0.55,Degraded,311.9,82.6,tick_lag_ms,172.77
+S2,libreqos-video-streaming,150,0,0,3,0.917,Optimal,311.9,82.6,stall_ratio_pct,0.87
+S3,Bulk File Transfer,50,30,0,6,0.993,Optimal,111.9,90.5,transfer_goodput_ratio,0.95
+S3,Real-Time Video Communication,50,30,0,3,0.722,Acceptable,111.9,90.5,frame_freeze_rate_pct,0.03
+S3,libreqos-real-time-gaming,50,30,0,3,0.367,Degraded,111.9,90.5,tick_lag_ms,114.77
+S3,libreqos-video-streaming,50,30,0,3,0.904,Optimal,111.9,90.5,stall_ratio_pct,0
+S4,Bulk File Transfer,0,0,1.5,6,0.73,Acceptable,11.9,71.7,transfer_goodput_ratio,0.76
+S4,Real-Time Video Communication,0,0,1.5,6,0.912,Optimal,11.9,71.7,frame_freeze_rate_pct,2.82
+S4,libreqos-real-time-gaming,0,0,1,5,0.923,Optimal,11.9,82.4,tick_lag_ms,32.7
+S4,libreqos-video-streaming,0,0,1,4,0.724,Acceptable,99.4,64.5,stall_ratio_pct,2.77
+S5,Bulk File Transfer,100,25,0,9,0.99,Optimal,211.9,86.6,transfer_goodput_ratio,0.91
+S5,Real-Time Video Communication,100,25,0,3,0.629,Acceptable,211.9,86.6,frame_freeze_rate_pct,2.78
+S5,libreqos-real-time-gaming,0,0,5,6,0.784,Acceptable,11.9,18.9,tick_lag_ms,83.03
+S5,libreqos-video-streaming,0,0,5,9,0.734,Acceptable,145.2,64,stall_ratio_pct,2.39
+S6,Bulk File Transfer,100,20,2,3,0.554,Degraded,211.9,56.3,transfer_goodput_ratio,0.59
+S6,Real-Time Video Communication,100,20,2,3,0.547,Degraded,211.9,56.3,frame_freeze_rate_pct,6.47
+S6,libreqos-real-time-gaming,100,20,2,3,0.121,Critical,211.9,56.3,tick_lag_ms,175.37
+S6,libreqos-video-streaming,100,20,2,3,0.637,Acceptable,211.9,56.3,stall_ratio_pct,3.09

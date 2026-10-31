@@ -1,0 +1,58 @@
+{
+  "project": "Application-Oriented Network Quality Evaluation Using QoO",
+  "team_name": "Team DevElite",
+  "team_code": "A3-PS029-TC237",
+  "problem_statement": "PS-029",
+  "framework": "cj-ike-kunze/ietf-126-hackathon-qoo",
+  "ietf_spec": "draft-ietf-ippm-qoo",
+  "scenarios": [
+    {
+      "scenario_id": "S1",
+      "name": "Baseline Network",
+      "delay_ms": 0.0,
+      "jitter_ms": 0.0,
+      "loss_pct": 0.0,
+      "description": "Ideal clean line without intentional impairments. Establishes the ground truth empirical baseline."
+    },
+    {
+      "scenario_id": "S2",
+      "name": "High Delay",
+      "delay_ms": 150.0,
+      "jitter_ms": 0.0,
+      "loss_pct": 0.0,
+      "description": "High fixed network latency typical of cross-continental fiber or geostationary satellite links."
+    },
+    {
+      "scenario_id": "S3",
+      "name": "High Jitter",
+      "delay_ms": 50.0,
+      "jitter_ms": 30.0,
+      "loss_pct": 0.0,
+      "description": "Packet delay variation causing packet inter-arrival distortion, typical of congested Wi-Fi / LTE."
+    },
+    {
+      "scenario_id": "S4",
+      "name": "Packet Loss",
+      "delay_ms": 0.0,
+      "jitter_ms": 0.0,
+      "loss_pct": 1.5,
+      "description": "Controlled packet drop rate (1.5%) triggering TCP congestion window collapse and packet retransmission."
+    },
+    {
+      "scenario_id": "S5",
+      "name": "Combined Delay and Jitter",
+      "delay_ms": 100.0,
+      "jitter_ms": 25.0,
+      "loss_pct": 0.0,
+      "description": "Simultaneous delay (100ms) and jitter (25ms) without packet loss, isolating queuing variation."
+    },
+    {
+      "scenario_id": "S6",
+      "name": "Combined Delay, Jitter and Packet Loss",
+      "delay_ms": 100.0,
+      "jitter_ms": 20.0,
+      "loss_pct": 2.0,
+      "description": "Compound dirty WAN environment: simultaneous latency, jitter variance, and packet loss."
+    }
+  ]
+}

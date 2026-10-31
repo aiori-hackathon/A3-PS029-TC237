@@ -1,0 +1,46 @@
+{
+  "id": "profile-bulk-transfer",
+  "profile_name": "Bulk File Transfer",
+  "category": "Elastic Bulk Data (TCP Throughput Dependent)",
+  "status": "PROPOSED_PENDING_MENTOR_APPROVAL",
+  "version": "1.0.0",
+  "reference_rfc": "RFC 3168 / RFC 5348 / draft-ietf-ippm-qoo",
+  "description": "High-volume non-interactive background file synchronization (e.g., cloud storage backups, large file distribution). Tolerant to high latency and jitter, but severely penalized by packet loss collapsing TCP congestion window and throughput.",
+  "parameters": {
+    "delay": {
+      "target_ms": 100.0,
+      "acceptable_ms": 400.0,
+      "unusable_ms": 1200.0,
+      "max_acceptable_ms": 500.0,
+      "weight": 0.05
+    },
+    "jitter": {
+      "target_ms": 20.0,
+      "acceptable_ms": 100.0,
+      "unusable_ms": 300.0,
+      "max_acceptable_ms": 150.0,
+      "weight": 0.05
+    },
+    "loss": {
+      "target_pct": 0.0,
+      "acceptable_pct": 0.8,
+      "unusable_pct": 3.0,
+      "max_acceptable_pct": 1.5,
+      "weight": 0.50
+    },
+    "throughput": {
+      "min_required_mbps": 25.0,
+      "target_mbps": 80.0,
+      "weight": 0.40
+    }
+  },
+  "utility_function": "concave_exponential_penalty",
+  "application_telemetry": {
+    "metric_name": "transfer_goodput_ratio",
+    "description": "Ratio of delivered useful application payload bytes to physical link capacity",
+    "target_value": 0.95,
+    "degraded_threshold": 0.60,
+    "critical_threshold": 0.25,
+    "unit": "ratio"
+  }
+}
